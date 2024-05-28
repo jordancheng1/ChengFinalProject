@@ -4,12 +4,12 @@ public class MainFrame implements Runnable {
     private GraphicsPanel panel;
 
     public MainFrame(String name) {
-        JFrame frame = new JFrame("");
+        JFrame frame = new JFrame("Brawl");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1020, 640);
+        frame.setSize(1275, 800);
         frame.setLocationRelativeTo(null);
 
-        panel = new GraphicsPanel(name);
+        panel = new GraphicsPanel();
         frame.add(panel);
 
         frame.setVisible(true);
