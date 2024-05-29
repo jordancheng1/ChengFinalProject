@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class GraphicsPanel extends JPanel implements KeyListener, MouseListener, ActionListener {
     private BufferedImage background;
+    private Player player;
+    private boolean[] pressedKeys;
     private JFrame enclosingFrame;
     private BufferedImage select;
     private BufferedImage character1;
@@ -21,9 +23,9 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private Rectangle easyButton;
     private Rectangle mediumButton;
     private Rectangle hardButton;
-    private double xCoord = 50;
-    private double yCoord = 50;
+    private int yNew = 50;
     private String charName = "";
+    private String charName2 = "";
     private boolean charSelected;
     private boolean gameStarted;
     private boolean diffSelected;
@@ -44,6 +46,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         easyButton = new Rectangle(305, 375, 183, 130);
         mediumButton = new Rectangle(520, 375, 183, 130);
         hardButton = new Rectangle(735, 375, 183, 130);
+        pressedKeys = new boolean[128];
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
@@ -92,16 +95,34 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
                 }
             }
             g.drawImage(background, 0, 0, null);
+            g.drawImage(player.getPlayerImage(), player.getxCoord(), player.getyCoord(), null);
+        }
+
+        // moves left (A)
+        if (pressedKeys[65] && gameStarted) {
+            player.faceLeft();
+            player.moveLeft();
+        }
+        // moves right (D)
+        if (pressedKeys[68] && gameStarted) {
+            player.faceRight();
+            player.moveRight();
+        }
+        // jumps (SPACE)
+        if (pressedKeys[32] && gameStarted) {
+            player.jump();
         }
     }
 
     public void mousePressed(MouseEvent e) {
         Point mouseClickLocation = e.getPoint();
         if (selectButton.contains(mouseClickLocation) && !charName.isEmpty() && diffSelected) {
+            player = new Player(charName, charName2, diff);
             gameStarted = true;
         }
         else if (character1Button.contains(mouseClickLocation)) {
-            charName = "The Avatar";
+            charName = "src/AangCharRight.png";
+            charName2 = "src/AangCharLeft.png";
             charSelected = true;
         }
         else if (easyButton.contains(mouseClickLocation)) {
@@ -120,13 +141,26 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
 
     public void keyPressed(KeyEvent e) {
         if (gameStarted) {
-
+            int key = e.getKeyCode();
+            pressedKeys[key] = true;
+            if (key == 32) {
+                for (int i = 0; i < 100; i++) {
+                    int y = player.getyCoord();
+                    yNew = y + 4;
+                }
+                for (int i = 0; i < 100; i++) {
+                    int y = player.getyCoord();
+                    yNew = y - 4;
+                }
+                pressedKeys[key] = false;
+            }
         }
     }
 
     public void keyReleased(KeyEvent e) {
         if (gameStarted) {
-
+            int key = e.getKeyCode();
+            pressedKeys[key] = false;
         }
     }
     public void mouseReleased(MouseEvent e) {}

@@ -5,26 +5,35 @@ import java.io.File;
 import java.io.IOException;
 
 public class Player {
-    private final double MOVE_AMT = 0.5;
-    private BufferedImage character;
+    private final double MOVE_AMT = 7.0;
+    private BufferedImage right;
+    private BufferedImage left;
     private double xCoord;
     private double yCoord;
     private int health;
-    private String name;
     private int difficulty;
+    private boolean facingRight;
+    private boolean playerJumped;
 
-    public Player(String image, String name, int difficulty) {
-        this.name = name;
+    public Player(String imageRight, String imageLeft, String difficulty) {
         xCoord = 50;
-        yCoord = 435;
-        if (difficulty > 1) {
+        facingRight = true;
+        playerJumped = false;
+        if (difficulty.equals("h")) {
             health = 1;
+            yCoord = 495;
         }
-        else {
+        else if (difficulty.equals("m")){
+            health = 3;
+            yCoord = 565;
+        }
+        else if (difficulty.equals("e")) {
             health = 5;
+            yCoord = 465;
         }
         try {
-            character =  ImageIO.read(new File(image));
+            right = ImageIO.read(new File(imageRight));
+            left = ImageIO.read(new File(imageLeft));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -42,12 +51,16 @@ public class Player {
         return health;
     }
 
-    public String getName() {
-        return name;
+    public void faceRight() {
+        facingRight = true;
+    }
+
+    public void faceLeft() {
+        facingRight = false;
     }
 
     public void moveRight() {
-        if (xCoord + MOVE_AMT <= 1020) {
+        if (xCoord + MOVE_AMT <= 1155) {
             xCoord += MOVE_AMT;
         }
     }
@@ -58,8 +71,28 @@ public class Player {
         }
     }
 
+    public void jump() {
+        if (!playerJumped) {
+
+        }
+    }
+
+    public void turn() {
+        if (facingRight) {
+            faceLeft();
+        }
+        else {
+            faceRight();
+        }
+    }
+
     public BufferedImage getPlayerImage() {
-        return character;
+        if (facingRight) {
+            return right;
+        }
+        else {
+            return left;
+        }
     }
 
     public Rectangle playerRect() {
