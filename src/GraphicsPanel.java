@@ -112,6 +112,10 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         if (pressedKeys[32] && gameStarted) {
             player.jump();
         }
+        // down (S)
+        if (pressedKeys[83] && gameStarted) {
+            player.moveDown();
+        }
     }
 
     public void mousePressed(MouseEvent e) {
@@ -143,17 +147,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         if (gameStarted) {
             int key = e.getKeyCode();
             pressedKeys[key] = true;
-            if (key == 32) {
-                for (int i = 0; i < 100; i++) {
-                    int y = player.getyCoord();
-                    yNew = y + 4;
-                }
-                for (int i = 0; i < 100; i++) {
-                    int y = player.getyCoord();
-                    yNew = y - 4;
-                }
-                pressedKeys[key] = false;
-            }
         }
     }
 
