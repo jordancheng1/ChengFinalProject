@@ -13,6 +13,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private BufferedImage background;
     private Player player;
     private boolean[] pressedKeys;
+    private ArrayList<BufferedImage> aangAttacks;
+    private Animator aangAttackAnimation;
     private JFrame enclosingFrame;
     private BufferedImage select;
     private BufferedImage character1;
@@ -23,7 +25,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private Rectangle easyButton;
     private Rectangle mediumButton;
     private Rectangle hardButton;
-    private int yNew = 50;
     private String charName = "";
     private String charName2 = "";
     private boolean charSelected;
@@ -37,6 +38,11 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             character1 = ImageIO.read(new File("src/Aang.png"));
             locked = ImageIO.read(new File("src/LockedCharacter.png"));
             difficulty = ImageIO.read(new File("src/Difficulty.png"));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack1")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack2")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack3")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack4")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack5")));
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -47,6 +53,9 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         mediumButton = new Rectangle(520, 375, 183, 130);
         hardButton = new Rectangle(735, 375, 183, 130);
         pressedKeys = new boolean[128];
+        aangAttackAnimation = new Animator(aangAttacks);
+        aangAttackAnimation.setSpeed(200);
+        aangAttackAnimation.play();
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
@@ -107,14 +116,6 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         if (pressedKeys[68] && gameStarted) {
             player.faceRight();
             player.moveRight();
-        }
-        // jumps (SPACE)
-        if (pressedKeys[32] && gameStarted) {
-            player.jump();
-        }
-        // down (S)
-        if (pressedKeys[83] && gameStarted) {
-            player.moveDown();
         }
     }
 

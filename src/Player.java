@@ -13,11 +13,6 @@ public class Player {
     private int health;
     private int difficulty;
     private boolean facingRight;
-    private boolean jump;
-    private float airSpeed = 0f;
-    private float gravity = 0.04f * 3;
-    private float jumpSpeed = -2.25f * 3;
-    private boolean inAir = false;
 
     public Player(String imageRight, String imageLeft, String difficulty) {
         xCoord = 50;
@@ -71,34 +66,6 @@ public class Player {
     public void moveLeft() {
         if (xCoord - MOVE_AMT >= 0) {
             xCoord -= MOVE_AMT;
-        }
-    }
-
-    public void jump() {
-        if (inAir) {
-            if (yCoord + airSpeed < 750) {
-                yCoord += airSpeed;
-                airSpeed += gravity;
-            }
-            else {
-                if (airSpeed > 0) {
-                    resetInAir();
-                }
-            }
-        }
-        else {
-            inAir = true;
-        }
-    }
-
-    public void resetInAir() {
-        inAir = false;
-        airSpeed = 0;
-    }
-
-    public void moveDown() {
-        if (yCoord + MOVE_AMT <= 655) {
-            yCoord += MOVE_AMT;
         }
     }
 
