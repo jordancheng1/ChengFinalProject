@@ -13,7 +13,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private BufferedImage background;
     private Player player;
     private boolean[] pressedKeys;
-    private ArrayList<BufferedImage> aangAttacks;
+    private ArrayList<BufferedImage> aangAttacks = new ArrayList<BufferedImage>();
     private Animator aangAttackAnimation;
     private JFrame enclosingFrame;
     private BufferedImage select;
@@ -38,11 +38,11 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             character1 = ImageIO.read(new File("src/Aang.png"));
             locked = ImageIO.read(new File("src/LockedCharacter.png"));
             difficulty = ImageIO.read(new File("src/Difficulty.png"));
-            aangAttacks.add(ImageIO.read(new File("src/AangAttack1")));
-            aangAttacks.add(ImageIO.read(new File("src/AangAttack2")));
-            aangAttacks.add(ImageIO.read(new File("src/AangAttack3")));
-            aangAttacks.add(ImageIO.read(new File("src/AangAttack4")));
-            aangAttacks.add(ImageIO.read(new File("src/AangAttack5")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack1.png")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack2.png")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack3.png")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack4.png")));
+            aangAttacks.add(ImageIO.read(new File("src/AangAttack5.png")));
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -105,6 +105,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(player.getPlayerImage(), player.getxCoord(), player.getyCoord(), null);
+//            aangAttackAnimation.update(System.currentTimeMillis());
+//            g.drawImage(aangAttackAnimation.sprite, player.getxCoord(), player.getyCoord(), null);
         }
 
         // moves left (A)
@@ -130,15 +132,15 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             charName2 = "src/AangCharLeft.png";
             charSelected = true;
         }
-        else if (easyButton.contains(mouseClickLocation)) {
+        else if (easyButton.contains(mouseClickLocation) && !gameStarted) {
             diffSelected = true;
             diff = "e";
         }
-        else if (mediumButton.contains(mouseClickLocation)) {
+        else if (mediumButton.contains(mouseClickLocation) && !gameStarted) {
             diffSelected = true;
             diff = "m";
         }
-        else if (hardButton.contains(mouseClickLocation)) {
+        else if (hardButton.contains(mouseClickLocation) && !gameStarted) {
             diffSelected = true;
             diff = "h";
         }

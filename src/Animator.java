@@ -10,7 +10,7 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Animator {
-    private ArrayList<BufferedImage> aangAttackFrames;
+    private ArrayList<BufferedImage> frames;
     public BufferedImage sprite;
     private volatile boolean running = false;
     private long beforeTime;
@@ -20,7 +20,7 @@ public class Animator {
     private int currentFrame;
 
     public Animator(ArrayList<BufferedImage> frames) {
-        aangAttackFrames = frames;
+        this.frames = frames;
     }
 
     public void setSpeed(long speed) {
@@ -32,11 +32,11 @@ public class Animator {
             if (time - previousTime >= speed) {
                 currentFrame++;
                 try {
-                    sprite = aangAttackFrames.get(frameAtPause);
+                    sprite = frames.get(currentFrame);
                 }
-                catch (IndexOutOfBoundsException e ){
+                catch (IndexOutOfBoundsException e){
                     currentFrame = 0;
-                    sprite = aangAttackFrames.get(currentFrame);
+                    sprite = frames.get(currentFrame);
                 }
                 previousTime = time;
             }
