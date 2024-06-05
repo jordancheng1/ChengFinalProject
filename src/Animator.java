@@ -43,6 +43,14 @@ public class Animator {
         }
     }
 
+    public long getPreviousTime() {
+        return previousTime;
+    }
+
+    public long getSpeed() {
+        return speed;
+    }
+
     public void play() {
         running = true;
         previousTime = 0;

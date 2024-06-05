@@ -27,6 +27,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private Rectangle hardButton;
     private String charName = "";
     private String charName2 = "";
+    private int characterSelected;
+    private boolean attackInputed;
     private boolean charSelected;
     private boolean gameStarted;
     private boolean diffSelected;
@@ -54,8 +56,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         hardButton = new Rectangle(735, 375, 183, 130);
         pressedKeys = new boolean[128];
         aangAttackAnimation = new Animator(aangAttacks);
-        aangAttackAnimation.setSpeed(200);
-        aangAttackAnimation.play();
+        aangAttackAnimation.setSpeed(100);
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
@@ -105,8 +106,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             }
             g.drawImage(background, 0, 0, null);
             g.drawImage(player.getPlayerImage(), player.getxCoord(), player.getyCoord(), null);
-//            aangAttackAnimation.update(System.currentTimeMillis());
-//            g.drawImage(aangAttackAnimation.sprite, player.getxCoord(), player.getyCoord(), null);
+            aangAttackAnimation.update(System.currentTimeMillis());
+            g.drawImage(aangAttackAnimation.sprite, player.getxCoord(), player.getyCoord(), null);
         }
 
         // moves left (A)
@@ -123,26 +124,27 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
 
     public void mousePressed(MouseEvent e) {
         Point mouseClickLocation = e.getPoint();
-        if (selectButton.contains(mouseClickLocation) && !charName.isEmpty() && diffSelected) {
-            player = new Player(charName, charName2, diff);
-            gameStarted = true;
+        if (!gameStarted) {
+            if (selectButton.contains(mouseClickLocation) && !charName.isEmpty() && diffSelected) {
+                player = new Player(charName, charName2, diff);
+                gameStarted = true;
+            } else if (character1Button.contains(mouseClickLocation)) {
+                charName = "src/AangCharRight.png";
+                charName2 = "src/AangCharLeft.png";
+                charSelected = true;
+                characterSelected = 1;
+            } else if (easyButton.contains(mouseClickLocation)) {
+                diffSelected = true;
+                diff = "e";
+            } else if (mediumButton.contains(mouseClickLocation)) {
+                diffSelected = true;
+                diff = "m";
+            } else if (hardButton.contains(mouseClickLocation)) {
+                diffSelected = true;
+                diff = "h";
+            }
         }
-        else if (character1Button.contains(mouseClickLocation)) {
-            charName = "src/AangCharRight.png";
-            charName2 = "src/AangCharLeft.png";
-            charSelected = true;
-        }
-        else if (easyButton.contains(mouseClickLocation) && !gameStarted) {
-            diffSelected = true;
-            diff = "e";
-        }
-        else if (mediumButton.contains(mouseClickLocation) && !gameStarted) {
-            diffSelected = true;
-            diff = "m";
-        }
-        else if (hardButton.contains(mouseClickLocation) && !gameStarted) {
-            diffSelected = true;
-            diff = "h";
+        else {
         }
     }
 
@@ -162,9 +164,8 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
-    public void mouseClicked(MouseEvent e){}
+    public void mouseClicked(MouseEvent e) {
+    }
     public void keyTyped(KeyEvent e) {}
-    public void MouseEntered(MouseEvent e) {}
-    public void MouseExited(MouseEvent e) {}
     public void actionPerformed(ActionEvent e) {}
 }
