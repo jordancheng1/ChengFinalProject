@@ -13,8 +13,13 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private BufferedImage background;
     private Player player;
     private boolean[] pressedKeys;
+    private Timer timer;
+    private int time;
     private ArrayList<BufferedImage> aangAttacks = new ArrayList<BufferedImage>();
+    private ArrayList<BufferedImage> aangAttacksLeft = new ArrayList<BufferedImage>();
+    private ArrayList<Enemy> enemies;
     private Animator aangAttackAnimation;
+    private Animator aangAttackAnimationLeft;
     private JFrame enclosingFrame;
     private BufferedImage select;
     private BufferedImage character1;
@@ -28,7 +33,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
     private String charName = "";
     private String charName2 = "";
     private int characterSelected;
-    private boolean attackInputed;
+    private boolean attacking;
     private boolean charSelected;
     private boolean gameStarted;
     private boolean diffSelected;
@@ -45,6 +50,11 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             aangAttacks.add(ImageIO.read(new File("src/AangAttack3.png")));
             aangAttacks.add(ImageIO.read(new File("src/AangAttack4.png")));
             aangAttacks.add(ImageIO.read(new File("src/AangAttack5.png")));
+            aangAttacksLeft.add(ImageIO.read(new File("src/AangAttack1Left.png")));
+            aangAttacksLeft.add(ImageIO.read(new File("src/AangAttack2Left.png")));
+            aangAttacksLeft.add(ImageIO.read(new File("src/AangAttack3Left.png")));
+            aangAttacksLeft.add(ImageIO.read(new File("src/AangAttack4Left.png")));
+            aangAttacksLeft.add(ImageIO.read(new File("src/AangAttack5Left.png")));
         }
         catch (IOException e) {
             System.out.println(e.getMessage());
@@ -55,8 +65,15 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         mediumButton = new Rectangle(520, 375, 183, 130);
         hardButton = new Rectangle(735, 375, 183, 130);
         pressedKeys = new boolean[128];
+        time = 0;
+        timer = new Timer(1000, this);
+        enemies = new ArrayList<>();
         aangAttackAnimation = new Animator(aangAttacks);
         aangAttackAnimation.setSpeed(100);
+        aangAttackAnimation.play();
+        aangAttackAnimationLeft = new Animator(aangAttacksLeft);
+        aangAttackAnimationLeft.setSpeed(100);
+        aangAttackAnimationLeft.play();
         addMouseListener(this);
         addKeyListener(this);
         setFocusable(true);
@@ -105,9 +122,47 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
                 }
             }
             g.drawImage(background, 0, 0, null);
-            g.drawImage(player.getPlayerImage(), player.getxCoord(), player.getyCoord(), null);
-            aangAttackAnimation.update(System.currentTimeMillis());
-            g.drawImage(aangAttackAnimation.sprite, player.getxCoord(), player.getyCoord(), null);
+            if (attacking) {
+                if (player.getDirection()) {
+                    aangAttackAnimation.update(System.currentTimeMillis());
+                    g.drawImage(aangAttackAnimation.sprite, player.getxCoord(), player.getyCoord(), null);
+                }
+                else {
+                    aangAttackAnimationLeft.update(System.currentTimeMillis());
+                    g.drawImage(aangAttackAnimationLeft.sprite, player.getxCoord(), player.getyCoord(), null);
+                }
+            }
+            else {
+                g.drawImage(player.getPlayerImage(), player.getxCoord(), player.getyCoord(), null);
+            }
+//            while (gameStarted) {
+//                for (int i = 0; i < enemies.size(); i++) {
+//                    Enemy enemy = enemies.get(i);
+//                    if (time % 2 == 0) {
+//                        g.drawImage(enemy.getImage(), enemy.getxCoord(), enemy.getyCoord(), null);
+//                    }
+//                    if (enemy.getxCoord() == 50) {
+//                        while (enemy.getyCoord() < 1155) {
+//                            enemy.moveRight();
+//                            if (player.playerRect().intersects(enemy.enemyRect())) {
+//                                if (attacking) {
+//                                    enemies.remove(i);
+//                                }
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        while (enemy.getyCoord() > 50) {
+//                            enemy.moveLeft();
+//                            if (player.playerRect().intersects(enemy.enemyRect())) {
+//                                if (!attacking) {
+//                                    player.loseHealth();
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
 
         // moves left (A)
@@ -127,6 +182,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
         if (!gameStarted) {
             if (selectButton.contains(mouseClickLocation) && !charName.isEmpty() && diffSelected) {
                 player = new Player(charName, charName2, diff);
+                timer.start();
                 gameStarted = true;
             } else if (character1Button.contains(mouseClickLocation)) {
                 charName = "src/AangCharRight.png";
@@ -145,6 +201,7 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             }
         }
         else {
+            attacking = true;
         }
     }
 
@@ -161,11 +218,22 @@ public class GraphicsPanel extends JPanel implements KeyListener, MouseListener,
             pressedKeys[key] = false;
         }
     }
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {
+        if (gameStarted && attacking) {
+            attacking = false;
+        }
+    }
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
-    public void mouseClicked(MouseEvent e) {
-    }
+    public void mouseClicked(MouseEvent e) {}
     public void keyTyped(KeyEvent e) {}
-    public void actionPerformed(ActionEvent e) {}
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof Timer && gameStarted) {
+            time++;
+            if (time % 2 == 0) {
+                Enemy enemy = new Enemy(diff);
+                enemies.add(enemy);
+            }
+        }
+    }
 }

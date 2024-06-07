@@ -49,6 +49,10 @@ public class Player {
         return health;
     }
 
+    public void loseHealth() {
+        health--;
+    }
+
     public void faceRight() {
         facingRight = true;
     }
@@ -67,6 +71,10 @@ public class Player {
         if (xCoord - MOVE_AMT >= 0) {
             xCoord -= MOVE_AMT;
         }
+    }
+
+    public boolean getDirection() {
+        return facingRight;
     }
 
     public void turn() {
